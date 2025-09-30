@@ -1,0 +1,134 @@
+<div class="container">
+  <header>
+    <nav class="navbar navbar-expand-lg fixed-top px-2" style="z-index: 3; background-color: white;">
+      <div class="container-fluid">
+     
+          <!--logo-->
+          <div class="d-flex justify-content-start ms-1 ms-md-4 pb-1">
+            <a class="navbar-brand" href="turmas.handlebars">
+              <i id="iconPerfil" class="bi bi-person-circle"></i>  
+            </a>
+          </div>
+
+          <!--menu sanduíche-->
+          <div class="d-flex me-1 me-md-4">
+            <button class="navbar-toggler my-auto" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuPrincipal" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon iconMenuSanduiche"></span>
+            </button>
+          </div>
+
+        <!--menu principal-->
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="menuPrincipal" aria-labelledby="offcanvasNavbarLabel">
+          <div class="offcanvas-header">
+            <h2 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item me-5 ms-lg-2">
+              <div class="d-flex align-items-center">
+                <i class="iconMenu bi bi-house-fill d-lg-none"></i>
+                <a class="nav-link ms-3" href="/index.handlebars">Início</a>
+            </div>
+            </li>
+            <li class="nav-item me-5">
+              <div class="d-flex align-items-center">
+                <i class="iconMenu bi bi-people-fill d-lg-none"></i>
+                <a class="nav-link active ms-3" aria-current="page" href="/turmas.handlebars">Turmas</a>
+              </div>
+            </li>
+            <li class="nav-item">
+              <div class="d-flex align-items-center">
+                <i class="iconMenu bi bi-clipboard2-fill d-lg-none"></i>
+                <a class="nav-link ms-3" href="/eventos.handlebars">Eventos</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+  
+  <!-- Menu flutuante -->
+  <div id="menuPerfil">
+    <p id="nomePerfil" class="text-center mt-3">Nome do usuário</p>
+    <a class="navbar-brand text-center" href="#">
+    <i class="bi bi-person-circle"></i>  
+    </a>
+    <a id="aEditar" href="#" class="text-center">Editar perfil</a>
+    <a id="aSair" href="#" class="text-center mb-2">Sair da conta</a>
+  </div>
+
+  <article id="listaMinistroArticle" class="container cCriarTurma">
+    <div class="row d-flex justify-content-start mt-3">
+      <div class="col-12 col-lg-5">
+              <div class="divTituloCadastroP row position-relative">
+                  <div class="d-flex justify-content-start">
+                      <h2 id="tituloCadastroPTurma" class="mt-3 pt-2 mt-md-2 mt-lg-1 pt-lg-4 position-absolute start-50 translate-middle-x text-center">Criar Turma</h2>
+                  </div>
+              </div>
+              <div class="row d-flex justify-content-center">
+                  <div class="col-sm-8">
+                      <form>
+                          <div class="d-flex flex-wrap">
+                              <div class="mb-2 mx-1 w-100 flex-wrap mt-4 mt-md-1">
+                                  <label for="nome" class="form-label">Nome da Turma:</label>
+                                  <input type="text" class="form-control" id="nome" placeholder="Ex.: Maternal II" name="nome">
+                              </div>
+                                  <div class="w-100">
+                                    <i><p class="intervaloP ps-1 mb-2 mt-2">Intervalo de Idade</p></i>
+                                  </div>
+                                  <div class="campinho mx-auto mb-2">
+                                    <label class="pb-2" for="idadeMin">Idade Mínima:</label><br>
+                                    <input class="formulario text-center ps-1 ps-lg-3" type="number" id="idadeMin" name="idadeMin" min="0" max="13">
+                                  </div>
+                                  <div class="campinho mx-auto mb-2">
+                                    <label class="pb-2" for="idadeMax">Idade Máxima:</label><br>
+                                    <input class="formulario text-center ps-1 ps-lg-3" type="number" id="idadeMax" name="idadeMax" min="0" max="13">
+                                  </div>
+                                  <div class="w-100">
+                                    <label class="pb-2 ms-1 mb-2 mt-2" for="idadeMax">Dias de culto da turma:</label><br>
+                                  </div>
+                                  <div class="d-flex flex-wrap justify-content-center">
+                                    <div class="row gap-1 d-flex flex-nowrap mb-1 w-100 mx-auto justify-content-center">
+                                      <input type="checkbox" class="btn-check" id="segunda" autocomplete="off" name="segunda">
+                                      <label class="diaSemanaM btn btn-outline" for="segunda">Segunda</label>
+                                      <input type="checkbox" class="btn-check" id="terca" autocomplete="off" name="terca">
+                                      <label class="diaSemanaM btn btn-outline" for="terca">Terça</label>
+                                      <input type="checkbox" class="btn-check" id="quarta" autocomplete="off" name="quarta">
+                                      <label class="diaSemanaM btn btn-outline" for="quarta">Quarta</label>
+                                    </div>
+                                    <div class="row gap-1 d-flex flex-nowrap mb-1 mx-auto w-100 justify-content-center">
+                                      <input type="checkbox" class="btn-check" id="quinta" autocomplete="off" name="quinta">
+                                      <label class="diaSemanaM btn btn-outline" for="quinta">Quinta</label>
+                                      <input type="checkbox" class="btn-check" id="sexta" autocomplete="off" name="sexta">
+                                      <label class="diaSemanaM btn btn-outline" for="sexta">Sexta</label>
+                                      <input type="checkbox" class="btn-check" id="sabado" autocomplete="off" name="sabado">
+                                      <label class="diaSemanaM btn btn-outline" for="sabado">Sábado</label>
+                                    </div>
+                                    <div class="row d-flex justify-content-center w-100">
+                                      <input type="checkbox" class="btn-check" id="domingo" autocomplete="off" name="domingo">
+                                      <label class="diaSemanaM btn btn-outline" for="domingo">Domingo</label>
+                                    </div>
+                                  </div>
+                          </div>
+                          <div class="divDivButton mt-3 mb-4">
+                              <div class="ms-1 ms-md-2 mb-2 w-100 d-flex justify-content-start">
+                                  <a href="/turmas.handlebars"><input class="buttonVoltar" type="button" value="Voltar"></a>
+                              </div>
+                              <div class="me-1 ms-md-2 mb-2 w-100 d-flex justify-content-end">
+                                  <input class="buttonProximo" type="submit" value="Enviar" >
+                              </div>
+                          </div>
+                      </form>
+                  </div>
+              </div>
+      </div>
+      <div class="col d-flex justify-content-center">
+        <img id="imgCriarTurma" class="img-fluid d-block" src="imagens/fundoCriarTurma.png">
+      </div>
+    </div>
+  </article>
+</div>
+<script src="/scripts/scriptCadastroTurma.js"></script>
+

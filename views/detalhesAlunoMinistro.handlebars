@@ -1,0 +1,342 @@
+<div class="container-fluid d-flex justify-content-center fundoRosaFormulario">
+    <header>
+        <nav class="navbar navbar-expand-lg fixed-top px-2" style="z-index: 3; background-color: #ffd8c8;">
+        <div class="container-fluid">
+            <script src="/scripts/scriptDetalhesAlunoMinistro.js"></script>
+            <!--logo-->
+            <div class="d-flex justify-content-start ms-1 ms-md-4 pb-1">
+                <a class="navbar-brand" href="listaCriancaMinistro.handlebars">
+                <i id="iconPerfil" class="bi bi-person-circle iconPerfilBranco"></i>  
+                </a>
+            </div>
+
+            <!--menu sanduíche-->
+            <div class="d-flex me-1 me-md-4">
+                <button class="navbar-toggler my-auto bordaBrancaMenuSanduiche" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuPrincipal" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon iconMenuSanduicheBranco"></span>
+                </button>
+            </div>
+
+            <!--menu principal-->
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="menuPrincipal" aria-labelledby="offcanvasNavbarLabel">
+            <div class="offcanvas-header">
+                <h2 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item me-5 ms-lg-2">
+                <div class="d-flex align-items-center">
+                    <i class="iconMenu bi bi-house-fill d-lg-none"></i>
+                    <a class="nav-link ms-3" href="/indexMinistro.handlebars">Início</a>
+                </div>
+                </li>
+                <li class="nav-item me-5">
+                <div class="d-flex align-items-center">
+                    <i class="iconMenu bi bi-people-fill d-lg-none"></i>
+                    <a class="nav-link ms-3 active" aria-current="page" href="turmasMinistro.handlebars">Turmas</a>
+                </div>
+                </li>
+                <li class="nav-item">
+                <div class="d-flex align-items-center">
+                    <i class="iconMenu bi bi-clipboard2-fill d-lg-none"></i>
+                    <a class="nav-link ms-3" href="/eventosMinistro.handlebars">Eventos</a>
+                </div>
+                </li>
+            </ul>
+            </div>
+        </div>
+        </nav>
+    </header>
+    
+     <!-- Menu flutuante -->
+  <div id="menuPerfil">
+    <p id="nomePerfil" class="text-center mt-3"> {{ministro.nome}} </p>
+
+    <a class="navbar-brand text-center" href="#">
+      <i class="bi bi-person-circle"></i>  
+    </a>
+
+    <!-- Botões do menu de perfil -->
+    <div class="text-center mb-3">
+      <a href="/editarMinistroPerfil" class="d-block mb-2">Editar perfil</a>
+      <a href="/logout-simples" class="d-block">Sair da conta</a>
+    </div>
+
+    <!-- Modal de edição de perfil do ministro -->
+    <div class="modal fade" id="modalEditarMinistro" tabindex="-1" aria-labelledby="modalEditarMinistroLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalEditarMinistroLabel">Editar Perfil</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function abrirModalEditarMinistro(cod) {
+      // Buscar dados do ministro via AJAX
+      fetch(`/api/ministro/detalhes/${cod}`)
+        .then(res => res.json())
+        .then(ministro => {
+          document.getElementById('modalNomeMinistro').value = ministro.nome || '';
+          document.getElementById('modalEmailMinistro').value = ministro.email || '';
+          // Preencher outros campos se necessário
+          // Salvar o código para uso no submit
+          document.getElementById('formModalEditarMinistro').dataset.cod = cod;
+          // Abrir modal
+          var modal = new bootstrap.Modal(document.getElementById('modalEditarMinistro'));
+          modal.show();
+        });
+    }
+
+    document.getElementById('formModalEditarMinistro').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const cod = e.target.dataset.cod;
+      const dados = {
+        nome: document.getElementById('modalNomeMinistro').value,
+        email: document.getElementById('modalEmailMinistro').value
+        // Adicione outros campos aqui
+      };
+      fetch(`/ministro/editar/${cod}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dados)
+      })
+      .then(res => res.ok ? res.json() : Promise.reject(res))
+      .then(() => {
+        alert('Perfil atualizado com sucesso!');
+        location.reload();
+      })
+      .catch(() => alert('Erro ao atualizar perfil.'));
+    });
+  </script>
+
+    
+    <div class="row margemSuperiorFormulario">
+        <div class="d-flex justify-content-center">
+            <div class="fundoFormulario col-sm-12 col-md-7">
+                <div class="divTituloCadastroP row position-relative">
+                    <div class="d-flex justify-content-start">
+                        <h2 class="tituloCadastroP py-2 position-absolute start-50 translate-middle-x text-center">Cadastro</h2>
+                    </div>
+                </div>
+                <div class="divTituloCadastro row mx-auto">
+                    <h4 class="tituloCadastro d-flex justify-content-center m-auto py-4">Dados Básicos</h4>
+                </div>
+                <div class="row">
+                    <div class="col-sm-8 mx-auto">
+                        <form>
+                            <div class="d-flex flex-wrap">
+                                <div class="nome mb-2 mx-auto flex-wrap">
+                                    <label for="nomeAluno" class="form-label">Nome:</label>
+                                    <input type="text" class="form-control" id="nomeAluno" placeholder="Digite seu nome completo." name="nome" autocomplete="name" disabled>
+                                </div>
+                                <div class="campinho mx-auto my-2">
+                                    <label class="form-label">Sexo:</label><br>
+                                    <div class="formulario px-auto py-1 d-flex justify-content-center flex-wrap">
+                                        <div class="align-items-center">
+                                            <input type="radio" id="feminino" name="genero" value="feminino" disabled>
+                                            <label class="me-1" for="feminino">Feminino</label>
+                                        </div>
+                                        <div class="align-items-center">
+                                            <input class="flex-wrap" type="radio" id="masculino" name="genero" value="masculino" disabled>
+                                            <label for="masculino">Masculino</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="campinho mx-auto my-2">
+                                    <label class="mb-2" for="dataNascAluno">Data de Aniversário:</label><br>
+                                    <input class="formulario px-2 py-1" type="date" id="dataNascAluno" name="dataNasc" disabled>
+                                </div>
+                                
+                                <div class="campinho mx-auto mt-2 mb-5">
+                                    <label for="foneAluno" class="form-label">Telefone:</label>
+                                    <input class="formulario px-2 py-1" type="tel" id="foneAluno" name="fone" pattern="([0-9]{2}) [0-9]{5}-[0-9]{4}" placeholder="(xx) xxxxx-xxxx" autocomplete="tel" disabled>
+                                </div>
+                                <div class="campinho mx-auto mt-2 mb-5">
+                                    <label for="emailAluno" class="form-label">E-mail:</label>
+                                    <input class="formulario px-2 py-1" type="email" id="emailAluno" name="email" placeholder="exemplo@gmail.com" autocomplete="email" disabled>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                <div class="divTituloCadastro row mx-auto">
+                    <h4 class="tituloCadastro d-flex justify-content-center m-auto py-4">Endereço</h4>
+                </div>
+                <div class="row">
+                    <div class="col-sm-8 mx-auto">
+                            <div class="d-flex flex-wrap">
+                                <div class="campinho mx-auto mb-2">
+                                    <label for="ruaAluno" class="form-label">Rua:</label>
+                                    <input class="formulario px-2 py-1" type="text" id="ruaAluno" name="rua" placeholder="Ex.: Rua dos Bobos" autocomplete="street-address" disabled>
+                                </div>
+                                <div class="campinho mx-auto mb-2">
+                                    <label for="nResidenciaAluno" class="form-label">Número da residência:</label>
+                                    <input class="formulario px-2 py-1" type="text" id="nResidenciaAluno" name="nResidencia" placeholder="Ex.: 123" autocomplete="street-address" disabled>
+                                </div>
+                                <div class="campinho mx-auto my-2">
+                                    <label for="bairroAluno" class="form-label">Bairro:</label>
+                                    <input class="formulario px-2 py-1" type="text" id="bairroAluno" name="bairro" placeholder="Ex.: Bairro Januária" autocomplete="address-line2" disabled>
+                                </div>
+                                <div class="campinho mx-auto my-2">
+                                    <label class="form-label" for="cidadeAluno">Cidade:</label>
+                                    <input class="formulario px-2 py-1" type="text" id="cidadeAluno" name="cidade"  placeholder="Ex.: Sombrio" autocomplete="address-level2" disabled>
+                                </div>
+                                <div class="d-flex flex-column w-50">
+                                    <div class="mx-1 mx-md-2 my-2">
+                                        <label for="ufAluno" class="form-label">UF:</label>
+                                        <input type="text" class="form-control" id="ufAluno" name="uf" placeholder="Ex.: SC" autocomplete="address-level1" disabled>
+                                    </div>
+                                    <div class="mx-1 mx-md-2 mt-2 mb-5">
+                                        <label for="cepAluno" class="form-label">CEP:</label>
+                                        <input type="text" class="form-control" id="cepAluno" name="cep" placeholder="Digite só números." autocomplete="postal-code" disabled>
+                                    </div>
+                                </div>
+                                <div class="campinho mx-auto mt-2 mb-5">
+                                    <label class="form-label" for="obsEnderecoAluno">Observações:</label>
+                                    <textarea class="formulario campinhoAlto px-2 py-1" type="text" id="obsEnderecoAluno" name="obs" placeholder="Ex.: se mora em apartamento, condomínio." disabled></textarea>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                <div class="divTituloCadastro row mx-auto">
+                    <h4 class="tituloCadastro d-flex justify-content-center m-auto py-4">Dados de Saúde</h4>
+                </div>
+                <div class="row">
+                    <div class="col-sm-8 mx-auto">
+                            <div class="d-flex flex-wrap">
+                                <div class="campinho mx-auto mb-2">
+                                    <label for="alergia" class="form-label">O(A) aluno(a) possui alguma alergia? Se sim, qual?</label>
+                                    <textarea class="formulario campinhoAltoAluno px-2 py-1" type="text" id="alergia" name="alergia" placeholder="Ex.: alergia à camarão, nozes, dipirona..." disabled></textarea>
+                                </div>
+                                <div class="campinho mx-auto mb-2">
+                                    <label for="laudo" class="form-label">O(A) aluno(a) possui algum laudo? Se sim, qual é o CID?</label>
+                                    <textarea class="formulario campinhoAltoAluno px-2 py-1" type="text" id="laudo" name="laudo" placeholder="Digite aqui o CID do laudo." disabled></textarea>
+                                </div>
+                                <div class="campinho mx-auto my-2">
+                                    <label for="restricaoA" class="form-label">O(A) aluno(a) possui alguma restrição alimentar? Se sim, explique.</label>
+                                    <textarea class="formulario campinhoAltoAluno px-2 py-1" type="text" id="restricaoA" name="restricaoA" placeholder="Ex.: intolerância à lactose, intolerância ao glúten..." disabled></textarea>
+                                </div>
+                                <div class="campinho mx-auto my-2">
+                                    <label class="form-label" for="medicamento">Ele(a) está tomando algum medicamento? Se sim, qual? Como é a recomendação?</label>
+                                    <textarea class="formulario campinhoAltoAluno px-2 py-1" type="text" id="medicamento" name="medicamento" placeholder="Digite aqui." disabled></textarea>
+                                </div>
+                                <div class="obsAluno mx-1 mx-md-2 mt-3 mb-5 w-100 p-2">
+                                    <p class="pObs"><strong>OBS.:</strong> caso haja mais de uma alergia, restrição alimentar, medicamento usado ou laudo, por favor escreva.
+                                    </p>
+                                </div>                          
+                            </div>
+                    </div>
+                </div>
+                <div class="divTituloCadastro row mx-auto">
+                    <h4 class="tituloCadastro d-flex justify-content-center m-auto py-4">Dados Adicionais</h4>
+                </div>
+                <div class="row">
+                    <div class="col-sm-8 mx-auto d-flex">
+                            <div class="d-flex flex-wrap flex-column w-50">
+                                <div class="campinhoAluno mx-auto mb-2">
+                                    <label for="nacionalidade" class="form-label">Qual é a nacionalidade do(a) aluno(a):</label>
+                                    <input class="formulario px-2 py-1" type="text" id="nacionalidade" name="nacionalidade" placeholder="Ex.: brasileiro" disabled>
+                                </div>
+                                <div class="campinhoAluno mx-auto my-2">
+                                    <label for="linguaNativa" class="form-label">Língua nativa do(a) aluno(a):</label>
+                                    <input class="formulario px-2 py-1" type="text" id="linguaNativa" name="linguaNativa" placeholder="Ex.: português" disabled>
+                                </div>
+                                <div class="campinhoAluno mx-auto my-2">
+                                    <label for="linguaEstrangeira" class="form-label">O(A) aluno(a) tem fluência em alguma língua estrangeira?</label>
+                                    <input class="formulario px-2 py-1" type="text" id="linguaEstrangeira" name="linguaEstrangeira" placeholder="Ex.: inglês" disabled>
+                                </div>
+                                <div class="campinhoAluno mx-auto mt-2 mb-5">
+                                    <label class="form-label" for="escola">Em qual escola o(a) aluno(a) estuda atualmente?</label>
+                                    <input class="formulario px-2 py-1" type="text" id="escola" name="escolaAtual"  placeholder="Digite aqui." disabled>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-wrap flex-column w-50"> 
+                                <div class="mx-1 mx-md-2 mb-2">
+                                    <label class="form-label" for="projetoAluno">Participas de outro projeto da igreja?</label>
+                                    <textarea class="formulario px-2 py-1" type="text" id="projetoAluno" name="projetoIgreja" placeholder="Ex.: toc toc, projeto ponte..." disabled></textarea>
+                                </div>
+                                <div class="campinhoAluno mx-auto mt-2 mb-5">
+                                    <label class="form-label" for="obsAluno">Você gostaria de fazer alguma observação importante sobre o(a) aluno(a)?</label>
+                                    <textarea class="formulario campinhoAlunoObs px-2 py-1" type="text" id="obsAluno" name="obs" placeholder="Ex.: algum medo, facilidades, dificuldades sociais..." disabled></textarea>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                <div class="divTituloCadastro row mx-auto">
+                    <h4 class="tituloCadastro d-flex justify-content-center m-auto py-4">Responsáveis</h4>
+                </div>
+                <div class="row">
+                    <div class="col-sm-8 mx-auto d-flex">
+                            <div class="bordaResponsavel d-flex flex-wrap flex-column w-50">
+                                <div class="campinhoResponsavel mx-auto mb-2 mt-1">
+                                    <label for="nomeResponsavel1" class="form-label">Nome do responsável 1:</label>
+                                    <input class="formulario px-2 py-1" type="text" id="nomeResponsavel1" name="resp1" placeholder="Digite o nome completo." autocomplete="name" disabled>
+                                </div>
+                                <div class="campinhoResponsavel mx-auto my-2">
+                                    <label for="parentescoResponsavel1" class="form-label">Parentesco do responsável 1:</label>
+                                    <input class="formulario px-2 py-1" type="text" id="parentescoResponsavel1" name="parentescoResp1" placeholder="Digite o nome completo." disabled>
+                                </div>
+                                <div class="campinhoResponsavel mx-auto my-2">
+                                    <label for="foneResponsavel1" class="form-label">Telefone do responsável 1:</label>
+                                    <input class="formulario px-2 py-1" type="tel" id="foneResponsavel1" name="foneResp1"  OnKeyPress="formatar('(##) #####-####',this)" maxlength="15"  placeholder="(xx) xxxxx-xxxx" autocomplete="tel" disabled>
+                                </div>
+                               
+                            </div>
+                            <div class="d-flex flex-wrap flex-column w-50"> 
+                                <div class="campinhoResponsavel mx-auto mb-2 mt-1"> 
+                                    <label for="nomeResponsavel2" class="form-label">Nome do responsável 2:</label>
+                                    <input class="formulario px-2 py-1" type="text" id="nomeResponsavel2" name="resp2" placeholder="Digite o nome completo." autocomplete="name" disabled>
+                                </div>
+                                <div class="campinhoResponsavel mx-auto my-2">
+                                    <label for="parentescoResponsavel2" class="form-label">Parentesco do responsável 2:</label>
+                                    <input class="formulario px-2 py-1" type="text" id="parentescoResponsavel2" name="parentescoResp2" placeholder="Digite o nome completo." disabled>
+                                </div>
+                                <div class="campinhoResponsavel mx-auto my-2">
+                                    <label for="foneResponsavel2" class="form-label">Telefone do responsável 2:</label>
+                                    <input class="formulario px-2 py-1" type="tel" id="foneResponsavel2" name="foneResp2"  OnKeyPress="formatar('(##) #####-####',this)" maxlength="15"  placeholder="(xx) xxxxx-xxxx" autocomplete="tel" disabled>
+                                </div>
+                              
+                            </div>
+                    </div>
+                    <div class="col-sm-8 mx-auto d-flex flex-column align-items-center px-4">
+                        <h6 class="mt-4 mb-3" style="text-align: center;">TERMO DE AUTORIZAÇÃO PARA USO DE IMAGEM DE MENORES</h6>
+
+                        <p style="text-align: justify;">Pelo presente instrumento, os pais ou responsáveis legais do(a) menor declaram, para os devidos fins, que AUTORIZAM, de forma gratuita, definitiva e irrevogável, o uso da imagem do(a) menor, captada por meio de fotografias, vídeos ou quaisquer outros meios audiovisuais, durante atividades, eventos, projetos ou ações promovidas pela instituição.<br><br>
+                        
+                        A presente autorização compreende o uso da imagem em qualquer meio de comunicação, incluindo, mas não se limitando a: redes sociais, sites institucionais, materiais impressos, vídeos institucionais e outras mídias relacionadas às atividades da instituição, sempre com a finalidade de divulgação institucional, educativa, informativa ou cultural, sem fins lucrativos.<br><br>
+                        
+                        Os pais ou responsáveis declaram, ainda, que esta autorização é concedida sem qualquer contraprestação financeira e que o uso da imagem do(a) menor não caracteriza uso indevido, estando de acordo com os princípios legais vigentes, especialmente os previstos no Estatuto da Criança e do Adolescente (ECA).<br><br>
+                        
+                        Por ser expressão da verdade, firmam o presente Termo de forma livre e espontânea.</p>
+                    </div>
+                    <div class="d-flex justify-content-center mb-5 mt-2">
+                        <div class="form-check me-3">
+                            <input type="radio" name="autorizacao" id="autorizacaoS" value="s" disabled>
+                            <label for="autorizacaoS">Sim, autorizo</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="radio" name="autorizacao" id="autorizacaoN" value="n" disabled>
+                            <label for="autorizacaoN">Não autorizo</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center mb-4 mt-1">
+                    <div class="divButton campinho mx-2 mb-2 d-flex justify-content-center">
+                        <a href="/turmasMinistro.handlebars"><input class="buttonVoltar" type="button" value="Voltar"></a>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+  window.usuarioCod = {{ministro.cod}};
+  window.usuarioTipo = 'ministro';
+</script>
+

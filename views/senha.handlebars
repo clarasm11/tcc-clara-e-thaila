@@ -1,0 +1,57 @@
+<div class="container-fluid" id="loginBackground">
+    <a href="/escolha.handlebars"> 
+        <p class="cadastroLogin mx-4 mt-3 d-flex justify-content-end">Cadastrar-se</p>
+    </a>
+    <div>       
+        <div class="container containerLogin">
+            <div class="row" id="indexText">
+                <div class="col d-flex justify-content-center align-items-center">
+                    <img id="imgLogin" class="img-fluid d-lg-none d-block" src="imagens/login.png">
+                </div>           
+                <div class="col-md-7 col-12">
+                    <div class="divLogin d-flex justify-content-center"> 
+                        <div class="bordaLogin d-flex flex-column pb-3 pt-4">
+
+                            <!-- 🔹 Form corrigido -->
+                            <form action="/login" method="POST">
+                                <div class="row mx-auto align-items-center">
+                                    <h4 class="tituloLogin mt-1 text-center">Nova Senha</h4>
+                                </div>
+
+                                <div class="campoLogin mb-2 mt-3 mx-auto">
+                                    <label for="user" class="form-label">Senha</label>
+                     <input class="formulario px-2 py-1" 
+                         type="password" 
+                         id="novaSenha" 
+                         name="novaSenha" 
+                         placeholder="Digite a sua nova senha." 
+                         required>
+                                </div>
+
+                                <div class="campoLogin my-2 mx-auto position-relative">
+                                    <label for="senha" class="form-label">Confirmar Senha:</label>
+                                    <input class="formulario px-2 py-1" 
+                                           type="password" 
+                                           id="senha" 
+                                           name="senha" 
+                                           placeholder="Digite a sua senha novamente." 
+                                           required>
+                                    <i class="bi bi-eye position-absolute iconOlho" data-input="senha"></i>
+                                </div>
+
+                            
+
+                                <div class="mt-4 mb-2 w-100 d-flex justify-content-center">
+                                    <!-- 🔹 Botão submit simples -->
+                                    <button class="buttonProximo" type="submit">Enviar</button>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+                        <script src="/scripts/novaSenha.js"></script>
+            </div>
+        </div>
+    </div>
+</div>

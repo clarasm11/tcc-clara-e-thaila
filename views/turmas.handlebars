@@ -1,0 +1,138 @@
+<div id="turmaBackground" class="container-fluid">
+  <header> 
+    <nav class="navbar navbar-expand-lg fixed-top px-2" style="z-index: 3; background-color: white;">
+      <div class="container-fluid">
+        <!--logo-->
+        <div class="d-flex justify-content-start ms-4 ms-lg-5">
+          <a class="navbar-brand" href="#">
+            <i id="iconPerfil" class="bi bi-person-circle"></i>  
+          </a>
+        </div>
+
+        <!--menu sanduíche-->
+        <div class="d-flex me-4">
+          <button class="navbar-toggler my-auto" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuPrincipal" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon iconMenuSanduiche"></span>
+          </button>
+        </div>
+
+        <!--menu principal-->
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="menuPrincipal" aria-labelledby="offcanvasNavbarLabel">
+          <div class="offcanvas-header">
+            <h2 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item me-5 ms-lg-2">
+              <div class="d-flex align-items-center">
+                <i class="iconMenu bi bi-house-fill d-lg-none"></i>
+                <a class="nav-link ms-3" href="/index.handlebars">Início</a>
+            </div>
+            </li>
+            <li class="nav-item me-5">
+              <div class="d-flex align-items-center">
+                <i class="iconMenu bi bi-people-fill d-lg-none"></i>
+                <a class="nav-link active ms-3" aria-current="page" href="/turmas.handlebars">Turmas</a>
+              </div>
+            </li>
+            <li class="nav-item">
+              <div class="d-flex align-items-center">
+                <i class="iconMenu bi bi-clipboard2-fill d-lg-none"></i>
+                <a class="nav-link ms-3" href="/eventos.handlebars">Eventos</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+    </nav>
+  </header>
+  
+  <!-- Menu flutuante -->
+  <div id="menuPerfil">
+    <p id="nomePerfil" class="text-center mt-3"> {{ministro.nome}} </p>
+
+    <a class="navbar-brand text-center" href="#">
+      <i class="bi bi-person-circle"></i>  
+    </a>
+
+    <!-- Botões do menu de perfil -->
+    <div class="text-center mb-3">
+      <a href="/editarMinistroPerfil" class="d-block mb-2">Editar perfil</a>
+      <a href="/logout-simples" class="d-block">Sair da conta</a>
+    </div>
+
+    <!-- Modal de edição de perfil do ministro -->
+    <div class="modal fade" id="modalEditarMinistro" tabindex="-1" aria-labelledby="modalEditarMinistroLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalEditarMinistroLabel">Editar Perfil</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function abrirModalEditarMinistro(cod) {
+      // Buscar dados do ministro via AJAX
+      fetch(`/api/ministro/detalhes/${cod}`)
+        .then(res => res.json())
+        .then(ministro => {
+          document.getElementById('modalNomeMinistro').value = ministro.nome || '';
+          document.getElementById('modalEmailMinistro').value = ministro.email || '';
+          // Preencher outros campos se necessário
+          // Salvar o código para uso no submit
+          document.getElementById('formModalEditarMinistro').dataset.cod = cod;
+          // Abrir modal
+          var modal = new bootstrap.Modal(document.getElementById('modalEditarMinistro'));
+          modal.show();
+        });
+    }
+
+    document.getElementById('formModalEditarMinistro').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const cod = e.target.dataset.cod;
+      const dados = {
+        nome: document.getElementById('modalNomeMinistro').value,
+        email: document.getElementById('modalEmailMinistro').value
+        // Adicione outros campos aqui
+      };
+      fetch(`/ministro/editar/${cod}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dados)
+      })
+      .then(res => res.ok ? res.json() : Promise.reject(res))
+      .then(() => {
+        alert('Perfil atualizado com sucesso!');
+        location.reload();
+      })
+      .catch(() => alert('Erro ao atualizar perfil.'));
+    });
+  </script>
+
+  <article id="turmasArticle" class="container mt-4">
+      <div class="row d-flex justify-content-center mt-md-5">
+        <div class="col-12 d-flex justify-content-center flex-wrap">
+          <a href="/criarTurma.handlebars"><button class="turmasButton turmasButton1 d-flex justify-content-center align-items-center mt-3 mt-md-2 mt-lg-0 mx-2 mb-3">
+            <p class="turmasTextButton">CRIAR TURMA</p>
+          </button></a>
+          <a href="/listaMinistro.handlebars"><button class="turmasButton d-flex justify-content-center align-items-center mt-3 mt-md-2 mt-lg-0 mx-2 mb-3">
+            <p class="turmasTextButton">MINISTROS</p>
+          </button></a>
+          <a href="/preCadastro.handlebars"><button class="turmasButton ultimoButton d-flex justify-content-center align-items-center mt-3 mt-md-2 mt-lg-0 mx-2 mb-3">
+            <p class="turmasTextButton">PRÉ-CADASTRO</p>
+          </button></a>
+          <ul id="lista-turmas" class="list-unstyled d-flex flex-wrap justify-content-center"></ul>
+        </div>
+      </div>
+  </article>
+</div>
+
+        <script src="/scripts/scriptListaTurmas.js"></script>
+<script>
+  window.usuarioCod = {{ministro.cod}};
+  window.usuarioTipo = 'ministro';
+</script>

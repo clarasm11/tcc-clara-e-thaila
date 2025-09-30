@@ -1,0 +1,863 @@
+@font-face{
+    font-family: 'fonte1';
+    src:url(fontes/Coiny-Regular.ttf) ;
+  }
+
+@font-face{
+    font-family: 'fonte2';
+    src: url(fontes/RobotoMono-Light.ttf);
+ }
+
+/*css navbar*/
+
+.bi-person-circle {
+    color:#ffc9b3;
+    font-size: 60px;
+}
+
+.iconMenu {
+    color:#ffc0a7;
+}
+
+.nav-item {
+    font-size: 18pt;
+}
+
+#barra {
+    border-color: black;
+    width: 300px;
+}
+
+@media (max-width: 500px) {
+    #barra {
+        width: 13rem;
+    }
+  }
+
+#iconeBarra {
+    border-color: black;
+    background-color: white;
+}
+
+.iconBarra {
+    color: #ffc0a7;
+}
+
+.navbar-toggler {
+    border: solid #ffc0a7 2px; 
+}
+
+.navbar-toggler:focus {
+    box-shadow: none;
+    outline: none;
+}
+
+.iconMenuSanduiche {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='%23ffc0a7' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+/*css do menu de perfil*/
+
+#menuPerfil {
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+    display: none;
+    z-index: 5;
+    width: 25%;
+    position: fixed;
+    top: 32%;
+    left: 37%;
+  }
+
+  #menuPerfil a {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    color: #333;
+  }
+
+  @media (max-width: 991.98px) {
+      #menuPerfil {
+          width: 35%;
+          left: 33%;
+      }
+    }
+
+  @media (max-width: 600px) {
+      #menuPerfil {
+          width: 50%;
+          left: 21%;
+      }
+    }
+
+    @media (max-width: 500px) {
+        #menuPerfil {
+            width: 57%;
+            left: 21.5%;
+        }
+      }
+
+#aSair {
+    color: red !important;
+}
+
+#nomePerfil {
+    margin-bottom: 0;
+}
+
+#aEditar {
+    margin-top: -20px;
+}
+
+/*css index*/
+
+#imgIndex {
+    width: clamp(20rem, 50vw, 50rem);
+    z-index: 4;
+    margin-top: -110px;
+}
+
+@media (max-width: 1155px) {
+    #imgIndex {
+        margin-top: -60px;
+    }
+  }
+
+@media (max-width:870px) {
+    #imgIndex {
+        height: 360px;
+        margin-top: 10px;
+    }
+  }
+
+@media (max-width:767px) {
+    #imgIndex {
+        margin-top: 30px;
+        height: 300px;
+    }
+  }
+
+@media (max-width:690px) {
+    #imgIndex {
+        height: 260px;
+    }
+  } 
+
+.offcanvas {
+    width: 250px !important;
+  }
+
+#graca {
+    color:#fcc052;
+    font-family: fonte1;
+    text-align: center;
+    font-size: clamp(4rem, 6vw, 8rem)
+}
+
+#kids {
+    color:#ff914d;
+    font-family: fonte1;
+    text-align: center;
+    margin-top: -10px;
+    font-size: clamp(4rem, 6vw, 8rem);
+}
+
+#textinho {
+    font-family: arial;
+    font-size: large;
+}
+
+#indexText{
+    margin-top: clamp(3rem, 8vw, 8rem);
+}
+
+/*css eventos*/
+
+#eventoBackground {
+    background-image: url(imagens/TurmaEventoBackground.png);
+    background-size: cover;
+    background-repeat: repeat;
+    min-height: 100vh;
+}
+
+@media (max-width: 991.98px) {
+    #eventoBackground {
+      background-image: url(imagens/TurmaEventoBackground2.png);
+      background-repeat: repeat;
+      background-size: cover;
+    }
+  }
+
+.container {
+    padding-top: 50px;
+  }
+
+#eventosButton {
+    background-color: #ffc9b3;
+    color: white;
+    height: clamp(3.5rem, 7vw, 8rem);
+    width: clamp(17rem, 60vw, 70rem);
+    border-radius: clamp(1rem, 2vw, 2rem);
+    border: #ffd8c8;
+}
+
+#eventosTextButton {
+    text-align: center;
+    font-size: clamp(1rem, 2.5vw, 5rem);
+    font-weight: bold;
+    font-family: Arial;
+    margin: 0;
+}
+
+/*css turmas.html*/
+
+#turmaBackground {
+    background-image: url(imagens/TurmaEventoBackground.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+}
+
+@media (max-width: 991.98px) {
+    #turmaBackground {
+      background-image: url(imagens/TurmaEventoBackground2.png);
+      background-repeat: repeat;
+    }
+
+    .turmasButton {
+        border: #ffc0a7 solid 1px;
+    }
+
+  }
+
+  @media (max-width: 767px) {
+  .turmasButton1 {
+    margin-top: 45px !important;
+}
+  }
+
+.turmasButton {
+    background-color: #ffc9b3;
+    color: white;
+    height: clamp(3.5rem, 7vw, 8rem);
+    width: 18rem;
+    border-radius: clamp(1rem, 2vw, 2rem);
+    border: none;
+}
+
+.turmasTextButton {
+    text-align: center;
+    font-size: clamp(1rem, 2.5vw, 3.5rem);
+    font-weight: bold;
+    font-family: Arial;
+    margin: 0;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+}
+
+/*turmas criadas*/
+
+.turmasDiv {
+    background-color: #ffd4c4;
+    height: 9.5rem;
+    width: 18rem;
+    border-radius: clamp(1rem, 2vw, 2rem);
+    border: none;
+}
+.diaP {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color:#fca26b;
+    margin-bottom: 0;
+}
+
+.turmaP {
+    font-size: 1.2rem;
+    margin-bottom: 0;
+}
+
+.bi-trash3 {
+    font-size: 1.2rem;
+}
+
+/*css cadastroMinistro.html*/
+
+.fundoRosaFormulario {
+    background-color: #ffd8c8;
+}
+
+.fundoFormulario {
+    border: 0.5px solid #ff914d;
+    background-color: white;
+}
+
+.divTituloCadastro {
+    height: clamp(5rem, 10vw, 6rem);
+    border-top: 0.5px solid #ff914d;
+}
+
+.divTituloCadastroP {
+    height: clamp(5rem, 10vw, 6rem);
+}
+
+.tituloCadastroP {
+    color: #ff9756;
+    font-family: fonte2;
+    font-size: clamp(3rem, 5vw, 4rem);
+    z-index: 2;
+}
+
+.tituloCadastro {
+    color: #fcc052;
+    font-family: fonte2;
+    font-size: clamp(2rem, 5vw, 3rem); /* Tamanho ajustável */
+    word-wrap: break-word;
+}
+
+#logoNuvem {
+    width: 75%;
+}
+
+.iconVoltar {
+    color: #fca26b;
+    font-size: clamp(2rem, 10vw, 3.6rem);
+    z-index: 1;
+}
+
+.formulario {
+    border: 0.5px solid #ff9756;
+    width: 100%;
+    border-radius: 6px;
+}
+
+.campinho {
+    width: 47%;
+}
+
+.campinhoLogin{
+    width: 62%;
+}
+
+.campinhoAlto {
+    height: 124px;
+}
+
+.campinhoAltoObs {
+    height: 247px;
+}
+
+.divButton {
+    width: 47%;
+}
+
+.buttonProximo {
+    background-color: #ff9756;
+    color: white;
+    border-radius: 4px;
+    border-color: #ff9756;
+}
+
+.buttonVoltar {
+    background-color: #ff9756;
+    color: white;
+    border-radius: 4px;
+    border-color: #ff9756;
+}
+
+.form-control{
+    border-color: #ff9756;
+}
+
+.fotoPerfil {
+    color: #fca26b;
+}
+
+.fotoPerfil:hover {
+    color: #ff9756;
+}
+
+.text-primary{
+    color:#ff9756;
+}
+
+.iconOlho {
+    right: 10px;
+    top: 50%;
+    font-size: 1.3rem;
+}
+
+/*css detalhesMinistro.html*/
+
+.margemSuperiorFormulario {
+    margin-top: 121px;
+}
+
+.iconPerfilBranco {
+    color: white !important;
+}
+
+.iconMenuSanduicheBranco {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+
+.bordaBrancaMenuSanduiche {
+    border: solid white 2px; 
+}
+
+/*css listaMinistro.html*/
+
+#listaMinistroBackground {
+    background-image: url(imagens/TurmaEventoBackground.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+}
+
+@media (max-width: 991.98px) {
+    #listaMinistroBackground {
+      background-image: url(imagens/TurmaEventoBackground2.png);
+      background-repeat: repeat;
+    }
+  }
+
+.fundoLista {
+    margin-top: 10px;
+    border-radius: 20px;
+    background-color: #ffc9b3;
+    width: 50vw;
+}
+
+.campinhoAnotacoes {
+    width: 50vw;
+    height: 20vh;
+}
+
+.tituloMinistro{
+    color: #000000;
+    font-family: fonte2;
+    font-size: clamp(2rem, 5vw, 3rem); /* Tamanho ajustável */
+    word-wrap: break-word;
+}
+
+#filtroSelect {
+    border-color: #000000;
+}
+
+/*css criarTurma*/
+
+#imgCriarTurma {
+    width: clamp(20rem, 55vw, 32rem);
+    z-index: 4;
+    height: clamp(20rem, 55vw, 31rem);
+}
+
+@media (max-width: 991.98px) {
+    #imgCriarTurma {
+        margin-top: 20px;
+    }
+  }
+
+@media (max-width: 991.98px) {
+    .cCriarTurma {
+        margin-top: 20px;
+    }
+  }
+
+.iconVoltarTurma {
+    color: #fca26b;
+    font-size: 3rem;
+    z-index: 1;
+}
+
+#tituloCadastroPTurma {
+    color: #ff9756;
+    font-family: fonte2;
+    font-size: clamp(1.65rem, 3.5vw, 1.8rem);
+    z-index: 2;
+}
+
+.intervaloP {
+    font-size: 19px;
+}
+
+.diaSemanaM{
+    width: 31.5%;
+    display: flex;
+    justify-content: center;
+    border-color: #ff9756;
+    color: black;
+    background-color: white;
+}
+
+.divDivButton {
+    display: flex;
+    justify-content: space-between;
+}
+
+
+/*css criarEvento*/
+
+#imgEvento {
+    width: clamp(20rem, 55vw, 28rem);
+    z-index: 4;
+    height: clamp(20rem, 55vw, 27rem);
+}
+
+@media (max-width: 1200px) and (min-width: 1027px) {
+    .rEvento {
+        width: 50vw !important;
+        margin-left: -50px;
+    }
+  }
+
+@media (max-width: 1027px) and (min-width: 991.98px) {
+    .rEvento {
+        width: 55vw !important;
+        margin-left: -50px;
+    }
+  }
+
+@media (max-width: 991.98px) {
+    .buttonEventoM {
+        border: #ffc0a7 solid 1px;
+    }
+
+    .buttonEventom {
+        border: #ffc0a7 solid 1px;
+    }
+  }
+
+@media (max-width: 366px) {
+    .buttonEventom {
+        width: 47% !important;
+    }
+    .buttonEventoM {
+        width: 97% !important;
+    }
+    #imgEvento {
+        height: 18rem;
+    }
+  }
+
+.buttonEventom {
+    width: 31%;
+    height: 6.5rem;
+    background-color: #ffd8c8;
+    border-radius: 20px;
+}
+
+@media (max-width: 470px) {
+    .buttonEventom {
+      height: 5.2rem;
+    }
+  }
+
+
+.buttonEventoM {
+    width: 97.5%;
+    background-color: #ffd8c8;
+    border-radius: 20px;
+}
+
+.divEventom {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.itemButtonEvento {
+    font-size: 2rem;
+    color:#ff9756;
+}
+
+#tituloCadastroPTurma{
+    font-weight: bold;
+}
+
+.bi-check-circle-fill {
+    position: absolute;
+    font-size: 1.9rem;
+    color:#ff9756;
+    top: -10%;
+    left: 82%;
+    z-index: 2;
+    display: none;
+}
+
+#iconCheck {
+    top: -12% !important;
+    left: 94% !important;
+}
+
+@media (max-width: 470px) {
+    .bi-check-circle-fill {
+        font-size: 1.6rem;
+        left: 80%;
+    }
+  }
+
+.pEvento {
+    margin: 0;
+}
+
+/*css cadastroEventoGeral*/
+
+@media (max-width: 450px) and (min-height: 774px) {
+     .fundoFormularioGeral {
+      height: 100vh;
+      min-width: 56vw;
+    }
+  }
+
+.campinhoQuantidade{
+    height: 54%;
+}
+
+.nome {
+    width: 97%;
+}
+
+/*css cadastroEventoRelatório*/
+
+.fundoFormularioPoucoCampo {
+    min-width: 56vw;
+}
+
+.campoGrande {
+    height: 51vh;
+}
+
+@media (max-width: 991.98px) {
+     .fundoFormularioPoucoCampo {
+      width: 93vw;
+      height: 100vh;
+    }
+  }
+
+/*css eventoDinâmica*/
+
+.campoGrandeMetade {
+    height: 24vh;
+}
+
+/*css eventoMateriais*/
+
+.fundoFormularioMaterial {
+    min-width: 56vw;
+}
+
+.campoMaterial {
+    border: 0.5px solid #ff9756;
+    width: 100%;
+}
+
+.campoAlturaMaterial {
+    height: 47vh;
+}
+
+.divMaterial {
+    width: 22.5%;
+}
+
+@media (max-width: 991.98px) {
+     .divMaterial {
+      width: 45%
+    }
+
+    .campoAlturaMaterial {
+      height: 30vh;
+    }
+  }
+
+/*css cadastroAluno*/
+
+.campinhoAltoAluno {
+    height: 100px;
+}
+
+.obsAluno {
+    background-color: #fca26b;
+    color: white;
+    text-align: justify;
+    border-radius: 6px;
+}
+
+.pObs {
+    margin: 0;
+}
+
+.campinhoAluno {
+    width: 95%;
+}
+
+.campinhoAlunoObs {
+    height: 168px;
+}
+
+@media (max-width: 446px) {
+     .campinhoAlunoObs {
+      height: 192px;
+    }
+}
+
+@media (max-width: 443px) {
+    .campinhoAlunoObs {
+     height: 216px;
+   }
+}
+
+@media (max-width: 364px) {
+    .campinhoAlunoObs {
+     height: 240px;
+   }
+}
+
+@media (max-width: 354px) {
+    .campinhoAlunoObs {
+     height: 216px;
+   }
+}
+
+.campinhoResponsavel {
+    width: 93%;
+}
+
+.bordaResponsavel {
+    border-right: 0.5px solid #ff9756;
+}
+
+.buttonAluno {
+    background-color: white;
+    color: rgb(102, 102, 102);
+    border-radius: 4px;
+    border-color: #ff9756;
+}
+
+.ajudaAluno {
+    color: #000000;
+}
+
+.obsAlunoFV {
+    background-color: #fca26b;
+    color: white;
+    text-align: justify;
+    border-radius: 6px;
+    width: 96.5%;
+}
+
+/*css eventoDivulgação*/
+
+.fundoFormularioDivulgacao {
+    min-width: 56vw;
+}
+
+/*css login*/
+
+#loginBackground {
+    background-image: url(imagens/loginBackground.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 100vh;
+}
+
+@media (max-width: 991.98px) {
+    #loginBackground {
+        background-image: url(imagens/loginBackground2.png);
+        background-repeat: repeat;
+    }
+  }
+
+@media (max-width: 767px) {
+    #imgLogin {
+        width: 14rem !important;
+        height: 12rem !important;
+        margin-bottom: 60px;
+        margin-top: -25px;
+    }
+}
+
+#imgLogin {
+    width: 22rem;
+    height: 18rem;
+    z-index: 4;
+}
+
+.campoLogin{
+    width: 90%;
+}
+
+.divLogin {
+    margin-top: -35px;
+}
+
+.tituloLogin {
+    font-family: fonte2;
+    font-size: clamp(2rem, 5vw, 3rem); /* Tamanho ajustável */
+    word-wrap: break-word;
+    color: #ff9756;
+}
+
+.pLogin {
+    text-decoration: underline;
+    color: #000 !important;
+}
+
+.cadastroLogin {
+    margin-bottom: 0;
+    color: #ff9756;
+    text-decoration: underline;
+}
+
+.containerLogin {
+    padding: 0;
+}
+
+/*css escolha*/
+#imgEscolha {
+    width: clamp(20rem, 50vw, 50rem);
+    z-index: 4;
+    margin-top: -100px;
+}
+
+@media (max-width: 991.98px) {
+    #imgEscolha {
+        margin-top: 30px;
+    }
+  }
+
+  .tituloCadastroPescolha {
+      color: #ff9756;
+      font-family: fonte2;
+      font-size: clamp(3rem, 5vw, 1.5rem);
+      z-index: 2;
+  }
+  
+  .tituloCadastroEscolha {
+      color: #fcc052;
+      font-family: fonte2;
+      font-size: clamp(2rem, 5vw, 1rem); /* Tamanho ajustável */
+      word-wrap: break-word;
+  }
+
+  .divButtonEscolha {
+    margin-top: -40px;
+  }
+  
+.escolhaButton {
+    background-color: #ffc9b3;
+    color: white;
+    height: clamp(5rem, 8vw, 8rem);
+    width: clamp(20rem, 30vw, 35rem);
+    border-radius: clamp(1rem, 2vw, 2rem);
+    border: none;
+}
+
+.escolhaTextButton {
+    font-size: clamp(1.7rem, 2.6vw, 3rem);
+    font-family: Arial;
+    margin: 0;
+}

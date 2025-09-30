@@ -1,0 +1,283 @@
+<div class="container-fluid d-flex justify-content-center fundoRosaFormulario">
+    <header>
+        <nav class="navbar navbar-expand-lg fixed-top px-2" style="z-index: 3; background-color: #ffd8c8;">
+        <div class="container-fluid">
+        
+            <!--logo-->
+            <div class="d-flex justify-content-start ms-1 ms-md-4 pb-1">
+                <a class="navbar-brand" href="listaMinistros.handlebars">
+                <i id="iconPerfil" class="bi bi-person-circle iconPerfilBranco"></i>  
+                </a>
+            </div>
+
+            <!--menu sanduíche-->
+            <div class="d-flex me-1 me-md-4">
+                <button class="navbar-toggler my-auto bordaBrancaMenuSanduiche" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuPrincipal" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon iconMenuSanduicheBranco"></span>
+                </button>
+            </div>
+
+            <!--menu principal-->
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="menuPrincipal" aria-labelledby="offcanvasNavbarLabel">
+            <div class="offcanvas-header">
+                <h2 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item me-5 ms-lg-2">
+                <div class="d-flex align-items-center">
+                    <i class="iconMenu bi bi-house-fill d-lg-none"></i>
+                    <a class="nav-link ms-3" href="/index.handlebars">Início</a>
+                </div>
+                </li>
+                <li class="nav-item me-5">
+                <div class="d-flex align-items-center">
+                    <i class="iconMenu bi bi-people-fill d-lg-none"></i>
+                    <a class="nav-link ms-3 active" aria-current="page" href="/turmas.handlebars">Turmas</a>
+                </div>
+                </li>
+                <li class="nav-item">
+                <div class="d-flex align-items-center">
+                    <i class="iconMenu bi bi-clipboard2-fill d-lg-none"></i>
+                    <a class="nav-link ms-3" href="/eventos.handlebars">Eventos</a>
+                </div>
+                </li>
+            </ul>
+            </div>
+        </nav>
+    </header>
+    
+    <!-- Menu flutuante -->
+     <!-- Menu flutuante -->
+  <div id="menuPerfil">
+    <p id="nomePerfil" class="text-center mt-3"> {{ministro.nome}} </p>
+
+    <a class="navbar-brand text-center" href="#">
+      <i class="bi bi-person-circle"></i>  
+    </a>
+
+    <!-- Botões do menu de perfil -->
+    <div class="text-center mb-3">
+      <a href="/editarMinistroPerfil" class="d-block mb-2">Editar perfil</a>
+      <a href="/logout-simples" class="d-block">Sair da conta</a>
+    </div>
+
+    <!-- Modal de edição de perfil do ministro -->
+    <div class="modal fade" id="modalEditarMinistro" tabindex="-1" aria-labelledby="modalEditarMinistroLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalEditarMinistroLabel">Editar Perfil</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function abrirModalEditarMinistro(cod) {
+      // Buscar dados do ministro via AJAX
+      fetch(`/api/ministro/detalhes/${cod}`)
+        .then(res => res.json())
+        .then(ministro => {
+          document.getElementById('modalNomeMinistro').value = ministro.nome || '';
+          document.getElementById('modalEmailMinistro').value = ministro.email || '';
+          // Preencher outros campos se necessário
+          // Salvar o código para uso no submit
+          document.getElementById('formModalEditarMinistro').dataset.cod = cod;
+          // Abrir modal
+          var modal = new bootstrap.Modal(document.getElementById('modalEditarMinistro'));
+          modal.show();
+        });
+    }
+
+    document.getElementById('formModalEditarMinistro').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const cod = e.target.dataset.cod;
+      const dados = {
+        nome: document.getElementById('modalNomeMinistro').value,
+        email: document.getElementById('modalEmailMinistro').value
+        // Adicione outros campos aqui
+      };
+      fetch(`/ministro/editar/${cod}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dados)
+      })
+      .then(res => res.ok ? res.json() : Promise.reject(res))
+      .then(() => {
+        alert('Perfil atualizado com sucesso!');
+        location.reload();
+      })
+      .catch(() => alert('Erro ao atualizar perfil.'));
+    });
+  </script>
+
+
+    <div class="row margemSuperiorFormulario">
+        <div class="d-flex justify-content-center">
+            <div class="fundoFormulario col-sm-12 col-md-7">
+                <div class="divTituloCadastroP row position-relative">
+                    <div class="d-flex justify-content-start">
+                        <h2 class="tituloCadastroP py-2 position-absolute start-50 translate-middle-x text-center">Cadastro</h2>
+                    </div>
+                </div>
+                <div class="divTituloCadastro row mx-auto">
+                    <h4 class="tituloCadastro d-flex justify-content-center m-auto py-4">Dados Básicos</h4>
+                </div>
+                <div class="row">
+                    <div class="col-sm-8 mx-auto">
+                        <form>
+                            <div class="d-flex flex-wrap">
+                                <div class="nome mb-2 mx-auto flex-wrap">
+                                    <label for="nomeMinistro" class="form-label">Nome:</label>
+                                    <input type="text" class="form-control" id="nomeMinistro" disabled>
+                                </div>
+                                <div class="campinho mx-auto my-2">
+                                    <label class="form-label">Sexo:</label><br>
+                                    <div class="formulario px-auto py-1 d-flex justify-content-center flex-wrap">
+                                        <div class="align-items-center">
+                                            <input type="radio" id="feminino" name="genero" value="feminino" disabled>
+                                            <label class="me-1" for="feminino">Feminino</label>
+                                        </div>
+                                        <div class="align-items-center">
+                                            <input type="radio" id="masculino" name="genero" value="masculino" disabled>
+                                            <label for="masculino">Masculino</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="campinho mx-auto my-2">
+                                    <label class="mb-2" for="dataNascMinistro">Data de Aniversário:</label><br>
+                                    <input class="formulario px-2 py-1" type="date" id="dataNascMinistro" disabled>
+                                </div>
+                                <div class="campinho mx-auto my-2">
+                                    <label for="rgMinistro" class="form-label">RG:</label>
+                                    <input type="text" class="form-control" id="rgMinistro" disabled>
+                                </div>
+                                <div class="campinho mx-auto my-2">
+                                    <label for="cpfMinistro" class="form-label">CPF:</label>
+                                    <input type="text" class="form-control" id="cpfMinistro" disabled>
+                                </div>
+                                <div class="campinho mx-auto mt-2 mb-5">
+                                    <label for="foneMinistro" class="form-label">Telefone:</label>
+                                    <input class="formulario px-2 py-1" type="tel" id="foneMinistro" disabled>
+                                </div>
+                                <div class="campinho mx-auto mt-2 mb-5">
+                                    <label for="emailMinistro" class="form-label">E-mail:</label>
+                                    <input class="formulario px-2 py-1" type="email" id="emailMinistro" disabled>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                <div class="divTituloCadastro row mx-auto">
+                    <h4 class="tituloCadastro d-flex justify-content-center m-auto py-4">Endereço</h4>
+                </div>
+                <div class="row">
+                    <div class="col-sm-8 mx-auto">
+                        <div class="d-flex flex-wrap">
+                            <div class="campinho mx-auto mb-2">
+                                <label for="ruaMinistro" class="form-label">Rua:</label>
+                                <input class="formulario px-2 py-1" type="text" id="ruaMinistro" disabled>
+                            </div>
+                            <div class="campinho mx-auto mb-2">
+                                <label for="nResidenciaMinistro" class="form-label">Número da residência:</label>
+                                <input class="formulario px-2 py-1" type="text" id="nResidenciaMinistro" disabled>
+                            </div>
+                            <div class="campinho mx-auto my-2">
+                                <label for="bairroMinistro" class="form-label">Bairro:</label>
+                                <input class="formulario px-2 py-1" type="text" id="bairroMinistro" disabled>
+                            </div>
+                            <div class="campinho mx-auto my-2">
+                                <label class="form-label" for="cidadeMinistro">Cidade:</label>
+                                <input class="formulario px-2 py-1" type="text" id="cidadeMinistro" disabled>
+                            </div>
+                            <div class="d-flex flex-column w-50">
+                                <div class="mx-1 mx-md-2 my-2">
+                                    <label for="ufMinistro" class="form-label">UF:</label>
+                                    <input type="text" class="form-control" id="ufMinistro" disabled>
+                                </div>
+                                <div class="mx-1 mx-md-2 mt-2 mb-5">
+                                    <label for="cepMinistro" class="form-label">CEP:</label>
+                                    <input type="text" class="form-control" id="cepMinistro" disabled>
+                                </div>
+                            </div>
+                            <div class="campinho mx-auto mt-2 mb-5">
+                                <label class="form-label" for="obsEnderecoMinistro">Observações:</label>
+                                <textarea class="formulario campinhoAlto px-2 py-1" id="obsEnderecoMinistro" name="obsEndereco" disabled></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="divTituloCadastro row mx-auto">
+                    <h4 class="tituloCadastro d-flex justify-content-center m-auto py-4">Dados Adicionais</h4>
+                </div>
+                <div class="row">
+                    <div class="col-sm-8 mx-auto">
+                        <div class="d-flex flex-wrap">
+                            <div class="campinho mx-auto mb-2">
+                                <label for="habilidadeMinistro" class="form-label">Habilidades:</label>
+                                <textarea class="formulario campinhoAlto px-2 py-1" id="habilidadeMinistro" disabled></textarea>
+                            </div>
+                            <div class="campinho mx-auto mb-2">
+                                <label for="dificuldadeMinistro" class="form-label">Dificuldades:</label>
+                                <textarea class="formulario campinhoAlto px-2 py-1" id="dificuldadeMinistro" disabled></textarea>
+                            </div>
+                            <div class="campinho mx-auto my-2">
+                                <label for="formacaoMinistro" class="form-label">Formação:</label>
+                                <textarea class="formulario campinhoAlto px-2 py-1" id="formacaoMinistro" disabled></textarea>
+                            </div>
+                            <div class="campinho mx-auto my-2">
+                                <label class="form-label" for="profissaoMinistro">Profissão:</label>
+                                <textarea class="formulario campinhoAlto px-2 py-1" id="profissaoMinistro" disabled></textarea>
+                            </div>
+                            <div class="d-flex flex-column w-50">
+                                <div class="mx-1 mx-md-2 my-2">
+                                    <label for="pastor" class="form-label">É pastor?</label><br>
+                                    <div id="pastor" class="formulario px-auto py-1 d-flex justify-content-center flex-wrap">
+                                        <div class="align-items-center">
+                                            <input type="radio" id="simPastor" name="pastor" disabled>
+                                            <label class="me-1" for="simPastor">Sim</label>
+                                        </div>
+                                        <div class="align-items-center">
+                                            <input type="radio" id="nPastor" name="pastor" disabled>
+                                            <label for="nPastor">Não</label>
+                                        </div>
+                                    </div>
+                                <div class="mx-auto my-2">
+                                    <label for="dataEntMinistro" class="form-label">Data de Início:</label><br>
+                                    <input class="formulario px-2 py-1" type="date" id="dataEntMinistro" disabled></div>
+                                </div>
+                                <div class="mx-1 mx-md-2 mt-2 mb-4">
+                                    <label class="form-label" for="projetoMinistro">Projetos:</label>
+                                    <textarea class="formulario px-2 py-1" id="projetoMinistro" disabled></textarea>
+                                </div>
+                            </div>
+                            <div class="campinho mx-auto mt-2 mb-4">
+                                <label class="form-label" for="obsMinistro">Observações:</label>
+                                <textarea class="formulario campinhoAltoObs px-2 py-1" id="obsMinistro" name="obsMinistro" disabled></textarea>
+                            </div>                          
+                        </div>
+                        
+                        <div class="d-flex justify-content-center mb-4 mt-1">
+                            <div class="divButton campinho mx-2 mb-2 d-flex justify-content-center">
+                                    <a href="/listaMinistro.handlebars">
+                                <input class="buttonVoltar" type="button" value="Voltar"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div> 
+    </div>
+</div>
+    <script src="/scripts/scriptDetalhe.js"></script>
+    <script>
+  window.usuarioCod = {{ministro.cod}};
+  window.usuarioTipo = 'ministro';
+</script>
+

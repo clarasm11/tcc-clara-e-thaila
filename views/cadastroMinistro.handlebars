@@ -1,0 +1,190 @@
+<div class="container-fluid d-flex justify-content-center fundoRosaFormulario">
+    <div class="row">
+        <div class="d-flex justify-content-center">
+            <div class="fundoFormulario col-sm-12 col-md-7">
+                <div class="divTituloCadastroP row position-relative">
+                    <div class="d-flex justify-content-start">
+                        <h2 class="tituloCadastroP py-2 position-absolute start-50 translate-middle-x text-center">Cadastro</h2>
+                    </div>
+                </div>
+                <div class="divTituloCadastro row mx-auto">
+                    <h4 class="tituloCadastro d-flex justify-content-center m-auto py-4">Dados Básicos</h4>
+                </div>
+                <div class="row">
+                    <div class="col-sm-8 mx-auto">
+                        <form onsubmit="cadastrarMinistro(event)">
+                            <div class="d-flex flex-wrap">
+                                <div class="nome mb-2 mx-auto flex-wrap">
+                                    <label for="nomeMinistro" class="form-label">Nome:</label>
+                                    <input type="text" class="form-control" id="nomeMinistro" placeholder="Digite seu nome completo." name="nome" autocomplete="name">
+                                </div>
+                                <div class="campinho mx-auto my-2">
+                                    <label class="form-label">Sexo:</label><br>
+                                    <div class="formulario px-auto py-1 d-flex justify-content-center flex-wrap">
+                                        <div class="align-items-center">
+                                            <input type="radio" id="feminino" name="genero" value="2">
+                                            <label class="me-1" for="feminino">Feminino</label>
+                                        </div>
+                                        <div class="align-items-center">
+                                            <input class="flex-wrap" type="radio" id="masculino" name="genero" value="1">
+                                            <label for="masculino">Masculino</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="campinho mx-auto my-2">
+                                    <label class="mb-2" for="dataNascMinistro">Data de Nascimento:</label><br>
+                                    <input class="formulario px-2 py-1" type="date" id="dataNascMinistro" name="dataNasc" autocomplete="bday" min="1900-01-01" max="2050-12-31">
+                                </div>
+                                <div class="campinho mx-auto my-2">
+                                    <label for="rgMinistro" class="form-label">RG:</label>
+                                    <input type="text" class="form-control" id="rgMinistro" placeholder="Digite só números." name="rg" OnKeyPress="formatar('###.###.###-##',this)" maxlength="14">
+                                </div>
+                                <div class="campinho mx-auto my-2">
+                                    <label for="cpfMinistro" class="form-label">CPF:</label>
+                                    <input type="text" class="form-control" id="cpfMinistro" placeholder="Digite só números." name="cpf" OnKeyPress="formatar('###.###.###-##',this)" maxlength="14">
+                                </div>
+                                <div class="campinho mx-auto mt-2 mb-5">
+                                    <label for="foneMinistro" class="form-label">Telefone:</label>
+                                    <input class="formulario px-2 py-1" type="tel" id="foneMinistro" name="fone" OnKeyPress="formatar('(##) #####-####',this)" maxlength="15" placeholder="(xx) xxxxx-xxxx" autocomplete="tel">
+                                </div>
+                                <div class="campinho mx-auto mt-2 mb-5">
+                                    <label for="emailMinistro" class="form-label">E-mail:</label>
+                                    <input class="formulario px-2 py-1" type="email" id="emailMinistro" name="email" placeholder="exemplo@gmail.com" autocomplete="email">
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                <div class="divTituloCadastro row mx-auto">
+                    <h4 class="tituloCadastro d-flex justify-content-center m-auto py-4">Endereço</h4>
+                </div>
+                <div class="row">
+                    <div class="col-sm-8 mx-auto">
+                            <div class="d-flex flex-wrap">
+                                <div class="campinho mx-auto mb-2">
+                                    <label for="ruaMinistro" class="form-label">Rua:</label>
+                                    <input class="formulario px-2 py-1" type="text" id="ruaMinistro" name="rua" placeholder="Ex.: Rua dos Bobos" autocomplete="street-address">
+                                </div>
+                                <div class="campinho mx-auto mb-2">
+                                    <label for="nResidenciaMinistro" class="form-label">Número da residência:</label>
+                                    <input class="formulario px-2 py-1" type="text" id="nResidenciaMinistro" name="nResidencia" placeholder="Ex.: 123" autocomplete="street-address">
+                                </div>
+                                <div class="campinho mx-auto my-2">
+                                    <label for="bairroMinistro" class="form-label">Bairro:</label>
+                                    <input class="formulario px-2 py-1" type="text" id="bairroMinistro" name="bairro" placeholder="Ex.: Bairro Januária" autocomplete="address-line2">
+                                </div>
+                                <div class="campinho mx-auto my-2">
+                                    <label class="form-label" for="cidadeMinistro">Cidade:</label>
+                                    <input class="formulario px-2 py-1" type="text" id="cidadeMinistro" name="cidade"  placeholder="Ex.: Sombrio" autocomplete="address-level2">
+                                </div>
+                                <div class="d-flex flex-column w-50">
+                                    <div class="mx-1 mx-md-2 my-2">
+                                        <label for="ufMinistro" class="form-label">UF:</label>
+                                        <input type="text" class="form-control" id="ufMinistro" name="uf" placeholder="Ex.: SC" autocomplete="address-level1">
+                                    </div>
+                                    <div class="mx-1 mx-md-2 mt-2 mb-5">
+                                        <label for="cepMinistro" class="form-label">CEP:</label>
+                                        <input type="text" class="form-control" id="cepMinistro" name="cep" placeholder="Digite só números." autocomplete="postal-code" OnKeyPress="formatar('#####-###',this)" maxlength="9">
+                                    </div>
+                                </div>
+                                <div class="campinho mx-auto mt-2 mb-5">
+                                    <label class="form-label" for="obsEnderecoMinistro">Observações:</label>
+                                    <textarea class="formulario campinhoAlto px-2 py-1" type="text" id="obsEnderecoMinistro" name="obs" placeholder="Ex.: se mora em apartamento, condomínio."></textarea>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                <div class="divTituloCadastro row mx-auto">
+                    <h4 class="tituloCadastro d-flex justify-content-center m-auto py-4">Dados Adicionais</h4>
+                </div>
+                <div class="row">
+                    <div class="col-sm-8 mx-auto">
+                            <div class="d-flex flex-wrap">
+                                <div class="campinho mx-auto mb-2">
+                                    <label for="habilidadeMinistro" class="form-label">Você tem alguma habilidade que gostaria de ressaltar?</label>
+                                    <textarea class="formulario campinhoAlto px-2 py-1" type="text" id="habilidadeMinistro" name="habilidades" placeholder="Ex.: facilidade em cuidar de crianças mais novas..."></textarea>
+                                </div>
+                                <div class="campinho mx-auto mb-2">
+                                    <label for="dificuldadeMinistro" class="form-label">Você tem alguma dificuldade que gostaria de ressaltar?</label>
+                                    <textarea class="formulario campinhoAlto px-2 py-1" type="text" id="dificuldadeMinistro" name="restricoes" placeholder="Ex.: dificuldade em desenvolver atividades lúdicas..."></textarea>
+                                </div>
+                                <div class="campinho mx-auto my-2">
+                                    <label for="formacaoMinistro" class="form-label">Você tem alguma formação que agregue ao Ministério?</label>
+                                    <textarea class="formulario campinhoAlto px-2 py-1" type="text" id="formacaoMinistro" name="escolaridade" placeholder="Ex.: formação em pedagogia, curso de cuidador infantil..."></textarea>
+                                </div>
+                                <div class="campinho mx-auto my-2">
+                                    <label class="form-label" for="profissaoMinistro">Você tem alguma profissão que agregue ao Ministério?</label>
+                                    <textarea class="formulario campinhoAlto px-2 py-1" type="text" id="profissaoMinistro" name="profissao" placeholder="Ex.: professor(a), babá, pedagogo(a)..."></textarea>
+                                </div>
+                                <div class="d-flex flex-column w-50">
+                                    <div class="mx-1 mx-md-2 my-2">
+                                        <label for="pastor" class="form-label">Você é um pastor do Ministério Graça Kids?</label><br>
+                                        <div id="pastor" class="formulario px-auto py-1 d-flex justify-content-center flex-wrap">
+                                            <div class="align-items-center">
+                                                <input type="radio" id="simPastor" name="pastor" value="simPastor">
+                                                <label class="me-1" for="simPastor">Sim</label>
+                                            </div>
+                                            <div class="align-items-center">
+                                                <input class="flex-wrap" type="radio" id="nPastor" name="pastor" value="nPastor">
+                                                <label for="nPastor">Não</label>
+                                            </div>
+                                        </div>
+                                    <div class="mx-auto my-2">
+                                        <label for="dataEntMinistro" class="form-label">Data de Início no Ministério:</label><br>
+                                        <input class="formulario px-2 py-1" type="date" id="dataEntMinistro" name="dataIng"></div>
+                                    </div>
+                                    <div class="mx-1 mx-md-2 mt-2 mb-5">
+                                        <label class="form-label" for="projetoMinistro">Participas de outro projeto da igreja?</label>
+                                        <textarea class="formulario px-2 py-1" type="text" id="projetoMinistro" name="projetoIgreja" placeholder="Ex.: toc toc, projeto ponte..."></textarea>
+                                    </div>
+                                </div>
+                                <div class="campinho mx-auto mt-2 mb-5">
+                                    <label class="form-label" for="obsMinistro">Você gostaria de fazer alguma observação importante?</label>
+                                    <textarea class="formulario campinhoAltoObs px-2 py-1" type="text" id="obsMinistro" name="obs" placeholder="Ex.: algum diagnóstico, alergia, preferência por cuidar de determinada faixa etária, disponibilidade de servir no Ministério..."></textarea>
+                                </div>                          
+                            </div>
+                    </div>
+                </div>
+                <div class="divTituloCadastro row mx-auto">
+                    <h4 class="tituloCadastro d-flex justify-content-center m-auto py-4">Criar Login</h4>
+                </div>
+                <div class="row">
+                    <div class="col-sm-8 mx-auto">
+                        <div class="text-center mb-4">
+                            <i class="fotoPerfil bi bi-person-circle"></i>
+                            
+
+                        </div>
+                            <div class="d-flex flex-wrap flex-column">
+                                <div class="campinhoLogin mx-auto mb-2">
+                                    <label for="userMinistro" class="form-label">Nome:</label>
+                                    <input class="formulario px-2 py-1" type="text" id="userMinistro" name="login" placeholder="Digite seu nome de usuário.">
+                                </div>
+                                <div class="campinhoLogin mx-auto my-2 position-relative">
+                                    <label for="senhaMinistro" class="form-label">Senha:</label>
+                                    <input class="formulario px-2 py-1" type="password" id="senha" name="senha" placeholder="Digite sua senha.">
+                                    <i class="bi bi-eye position-absolute iconOlho" data-input="senha"></i>
+                                </div>
+                                <div class="campinhoLogin mx-auto my-2 position-relative">
+                                    <label for="senhaMinistro2" class="form-label">Confirmar senha:</label>
+                                    <input class="formulario px-2 py-1" type="password" id="senha2" name="senha2" placeholder="Reescreva sua senha.">
+                                    <i class="bi bi-eye position-absolute iconOlho" data-input="senha2"></i>
+                                </div>
+                            </div>
+                            <div class="d-flex my-4">
+                                <div class="divButton campinho mx-2 mb-2 d-flex justify-content-center">
+                                    <a href="/login.handlebars">
+                                        <input class="buttonVoltar" id="btnProximo" type="button" value="próximo" disabled>
+                                    </a>
+                                </div>
+                                <div class="divButton campinho mx-2 mb-2 d-flex justify-content-center">
+                                    <input class="buttonProximo" type="submit" value="Enviar" >
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div> 
+    </div>
+</div>
+<script src="/scripts/scriptCadastro.js"></script>

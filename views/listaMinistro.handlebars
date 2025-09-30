@@ -1,0 +1,152 @@
+<div class="container" id="listaMinistroBackground">
+  <header>
+    <nav class="navbar navbar-expand-lg fixed-top px-2" style="z-index: 3;">
+      <div class="container-fluid">
+        <script src="/scripts/scriptLista.js"></script>
+          <!--logo-->
+          <div class="d-flex justify-content-start ms-1 ms-md-4 pb-1">
+            <a class="navbar-brand" href="turmas.handlebars">
+              <i id="iconPerfil" class="bi bi-person-circle"></i>  
+            </a>
+          </div>
+
+          <!--menu sanduíche-->
+          <div class="d-flex me-1 me-md-4">
+            <button class="navbar-toggler my-auto" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuPrincipal" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon iconMenuSanduiche"></span>
+            </button>
+          </div>
+
+        <!--menu principal-->
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="menuPrincipal" aria-labelledby="offcanvasNavbarLabel">
+          <div class="offcanvas-header">
+            <h2 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item me-5 ms-lg-2">
+              <div class="d-flex align-items-center">
+                <i class="iconMenu bi bi-house-fill d-lg-none"></i>
+                <a class="nav-link active ms-3" aria-current="page" href="/index.handlebars">Início</a>
+            </div>
+            </li>
+            <li class="nav-item me-5">
+              <div class="d-flex align-items-center">
+                <i class="iconMenu bi bi-people-fill d-lg-none"></i>
+                <a class="nav-link ms-3" href="/turmas.handlebars">Turmas</a>
+              </div>
+            </li>
+            <li class="nav-item">
+              <div class="d-flex align-items-center">
+                <i class="iconMenu bi bi-clipboard2-fill d-lg-none"></i>
+                <a class="nav-link ms-3" href="/eventos.handlebars">Eventos</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+    </nav>
+  </header>
+ <!-- Menu flutuante -->
+  <div id="menuPerfil">
+    <p id="nomePerfil" class="text-center mt-3"> {{ministro.nome}} </p>
+
+    <a class="navbar-brand text-center" href="#">
+      <i class="bi bi-person-circle"></i>  
+    </a>
+
+    <!-- Botões do menu de perfil -->
+    <div class="text-center mb-3">
+      <a href="/editarMinistroPerfil" class="d-block mb-2">Editar perfil</a>
+      <a href="/logout-simples" class="d-block">Sair da conta</a>
+    </div>
+
+    <!-- Modal de edição de perfil do ministro -->
+    <div class="modal fade" id="modalEditarMinistro" tabindex="-1" aria-labelledby="modalEditarMinistroLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalEditarMinistroLabel">Editar Perfil</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function abrirModalEditarMinistro(cod) {
+      // Buscar dados do ministro via AJAX
+      fetch(`/api/ministro/detalhes/${cod}`)
+        .then(res => res.json())
+        .then(ministro => {
+          document.getElementById('modalNomeMinistro').value = ministro.nome || '';
+          document.getElementById('modalEmailMinistro').value = ministro.email || '';
+          // Preencher outros campos se necessário
+          // Salvar o código para uso no submit
+          document.getElementById('formModalEditarMinistro').dataset.cod = cod;
+          // Abrir modal
+          var modal = new bootstrap.Modal(document.getElementById('modalEditarMinistro'));
+          modal.show();
+        });
+    }
+
+    document.getElementById('formModalEditarMinistro').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const cod = e.target.dataset.cod;
+      const dados = {
+        nome: document.getElementById('modalNomeMinistro').value,
+        email: document.getElementById('modalEmailMinistro').value
+        // Adicione outros campos aqui
+      };
+      fetch(`/ministro/editar/${cod}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dados)
+      })
+      .then(res => res.ok ? res.json() : Promise.reject(res))
+      .then(() => {
+        alert('Perfil atualizado com sucesso!');
+        location.reload();
+      })
+      .catch(() => alert('Erro ao atualizar perfil.'));
+    });
+  </script>
+
+  <main class="container mt-3">
+    <div class="row d-flex justify-content-center">
+      <div class="fundoLista col-md-11 col-lg-8 d-flex justify-content-center flex-column">
+        <p class="text-center tituloMinistro mb-3 mt-2">Ministros</p>
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-3 gap-3">
+          
+          <!--barra de busca-->
+          <form class="d-flex flex-grow-1" role="search">
+            <div class="input-group flex-nowrap">
+              <span id="iconeBarra" class="input-group-text">
+                <i class="iconBarra bi bi-search"></i>
+            </span>
+            <input id="barra" class="form-control" type="search" aria-label="Search">
+            <span id="iconeBarra" class="input-group-text">
+                <i class="iconBarra bi bi-mic-fill"></i>
+            </span>
+          </div>
+          </form>
+
+          <select id="filtroSelect" class="form-select w-auto">
+            <option value="validados">Validados e Ativos</option>
+            <option value="naoValidados">Não Validados</option>
+            <option value="inativos">Inativos</option>
+            <option value="todos">Todos</option>
+          </select>
+        </div>
+        
+        <!-- Adicione dentro do <main> ou onde quiser mostrar a lista -->
+        <div id="listaMinistrosContainer"></div>
+      </div>
+    </div>
+  </main>
+</div>
+<script>
+  window.usuarioCod = {{ministro.cod}};
+  window.usuarioTipo = 'ministro';
+</script>
