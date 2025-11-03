@@ -1,6 +1,8 @@
 // ==========================
 // IMPORTS
 // ==========================
+// Carrega variáveis de ambiente de um arquivo .env (se existir)
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const port = 3000;

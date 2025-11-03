@@ -2,16 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { Ministro, Aluno } = require('../models');
 const bcrypt = require('bcryptjs');
-const nodemailer = require('nodemailer');
-
-// Configuração do transporte de email (ajuste para seu provedor)
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: 'claradossantos110308@gmail.com',
-    pass: 'xvfa lrcf aujg foqp'
-  }
-});
+const { sendEmail } = require('../utils/emailService');
 
 // Armazena códigos temporários (ideal: usar banco ou cache)
 const codigos = {};
@@ -35,12 +26,7 @@ router.post('/email', async (req, res) => {
 
   // Envia email
   try {
-    await transporter.sendMail({
-      from: 'seuemail@gmail.com',
-      to: email,
-      subject: 'Código de redefinição de senha',
-      text: `Seu código de redefinição é: ${codigo}`
-    });
+    await sendEmail({ to: email, subject: 'Código de redefinição de senha', text: `Seu código de redefinição é: ${codigo}` });
     res.json({ message: 'Código enviado para o email.' });
   } catch (err) {
     console.error('Erro ao enviar email:', err);

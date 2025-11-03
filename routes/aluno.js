@@ -29,6 +29,17 @@ router.post('/pre-cadastro', async (req, res) => {
       status: 'pre'
     });
 
+    // Chama reclassificarAlunos para vincular automaticamente o pré-cadastro à turma correta
+    // (reclassificarAlunos criará vínculo na tabela Possui conforme faixa etária ou turma mais próxima)
+    try {
+      if (typeof reclassificarAlunos === 'function') {
+        await reclassificarAlunos();
+      }
+    } catch (e) {
+      console.error('Erro ao reclassificar após pré-cadastro:', e);
+      // não interrompe a resposta ao cliente
+    }
+
     res.status(201).json({ message: 'Pré-cadastro criado com sucesso!', aluno });
   } catch (error) {
     console.error('Erro ao criar pré-cadastro:', error);
@@ -63,14 +74,7 @@ router.post('/finalizar-cadastro', async (req, res) => {
       return res.status(400).json({ message: 'Este login já existe para outro aluno.' });
     }
 
-    // 🔹 Checa duplicidade de senha
-    const alunos = await Aluno.findAll({ attributes: ['senha'] });
-    for (const a of alunos) {
-      if (a.senha && await bcrypt.compare(senha, a.senha)) {
-        return res.status(400).json({ message: 'Esta senha já está em uso por outro aluno.' });
-      }
-    }
-
+  
     // Criptografa a senha antes de salvar
     const salt = await bcrypt.genSalt(10);
     const senhaHash = await bcrypt.hash(senha, salt);

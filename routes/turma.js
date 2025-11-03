@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { Turma, Aluno, Possui, DiaTurma } = require('../models');
+const { Turma, Aluno, Possui, DiaTurma, Ministro } = require('../models');
 const { Op } = require('sequelize');
+const { enviarAvisoTurmaInexistente } = require('../utils/emailService');
 
 // ===================== Rotas =====================
 
@@ -9,16 +10,9 @@ const { Op } = require('sequelize');
 router.post('/', async (req, res) => {
   try {
     const { nome, idadeMin, idadeMax, dias } = req.body;
-
-    // Cria a turma
     const novaTurma = await Turma.create({ nome, idadeMin, idadeMax });
 
-    // Associa os dias selecionados
-    if (dias && Array.isArray(dias)) {
-      await novaTurma.setDias(dias);
-    }
-
-    // Após criar, reclassifica os alunos automaticamente
+    if (dias && Array.isArray(dias)) await novaTurma.setDias(dias);
     await reclassificarAlunos();
 
     res.status(201).json({ message: 'Turma criada com sucesso!', turma: novaTurma });
@@ -28,12 +22,10 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Buscar todas as turmas com dias
+// Buscar todas as turmas
 router.get('/', async (req, res) => {
   try {
-    const turmas = await Turma.findAll({
-      include: [{ model: DiaTurma, as: 'dias' }]
-    });
+    const turmas = await Turma.findAll({ include: [{ model: DiaTurma, as: 'dias' }] });
     res.json(turmas);
   } catch (error) {
     console.error('[ERRO /api/turma GET]:', error);
@@ -41,56 +33,37 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Buscar alunos da turma com filtro de status
+// Buscar alunos da turma
 router.get('/:cod/alunos', async (req, res) => {
   try {
     const turma = await Turma.findByPk(req.params.cod, {
-      include: [{ model: DiaTurma, as: 'dias' }]
+      include: [{ model: DiaTurma, as: 'dias' }],
     });
     if (!turma) return res.status(404).json({ message: 'Turma não encontrada' });
 
     const statusParam = (req.query.status || 'todos').toLowerCase();
     let whereAluno = {};
-
-    if (statusParam === 'pre') {
-      whereAluno.status = 'pre';
-    } else if (statusParam === 'ativo') {
+    if (statusParam === 'pre') whereAluno.status = 'pre';
+    else if (statusParam === 'ativo') {
       whereAluno.status = 'ativo';
       whereAluno.ativo = 1;
-    } else if (statusParam === 'inativo') {
-      whereAluno.status = 'inativo';
-    }
+    } else if (statusParam === 'inativo') whereAluno.status = 'inativo';
 
-    // 🔹 Busca somente alunos vinculados a esta turma via Possui
     const alunos = await Aluno.findAll({
       where: whereAluno,
-      include: [
-        {
-          model: Possui,
-          as: 'Turmas',
-          required: true,
-          where: { turma: turma.cod }
-        }
-      ],
-      order: [['nome', 'ASC']]
+      include: [{ model: Possui, as: 'Turmas', required: true, where: { turma: turma.cod } }],
+      order: [['nome', 'ASC']],
     });
 
-    // 🔹 Filtra também pela faixa etária da turma
-    const alunosDaFaixa = alunos.filter(a => {
-      const idade = calcularIdade(a.dataNasc);
-      return idade >= turma.idadeMin && idade <= turma.idadeMax;
+    // Retornar todos os alunos vinculados à turma, mas sinalizar quem está fora da faixa
+    const alunosComFlag = alunos.map((a) => {
+      const plain = a.toJSON ? a.toJSON() : a;
+      const idade = calcularIdade(plain.dataNasc);
+      const estaNaFaixa = idade >= turma.idadeMin && idade <= turma.idadeMax;
+      return { ...plain, idade, foraFaixa: !estaNaFaixa };
     });
 
-    // Se for acesso de ministro, retorna só dados básicos
-    const referer = req.headers.referer || '';
-    const isMinistro = referer.includes('listaCriancaMinistro') || referer.includes('turmasMinistro') || req.originalUrl.includes('turmasMinistro');
-
-    if (isMinistro) {
-      return res.json(alunosDaFaixa.map(a => ({ nome: a.nome, cod: a.cod, status: a.status })));
-    }
-
-    // Para pastor/admin, retorna dados completos
-    res.json(alunosDaFaixa);
+    res.json(alunosComFlag);
   } catch (error) {
     console.error('[ERRO /api/turma/:cod/alunos]:', error);
     res.status(500).json({ message: 'Erro ao buscar alunos', error: error.message });
@@ -102,21 +75,11 @@ router.delete('/:cod', async (req, res) => {
   try {
     const { cod } = req.params;
     const turma = await Turma.findByPk(cod);
+    if (!turma) return res.status(404).json({ message: 'Turma não encontrada' });
 
-    if (!turma) {
-      return res.status(404).json({ message: 'Turma não encontrada' });
-    }
-
-    // Remove vínculos com alunos
     await Possui.destroy({ where: { turma: cod } });
-
-    // Remove vínculos com dias
     await turma.setDias([]);
-
-    // Exclui a turma
     await turma.destroy();
-
-    // Reclassifica todos os alunos após exclusão
     await reclassificarAlunos();
 
     res.json({ message: 'Turma excluída com sucesso!' });
@@ -139,40 +102,121 @@ function calcularIdade(dataNasc) {
 }
 
 async function reclassificarAlunos() {
-  const alunos = await Aluno.findAll({ where: { status: { [Op.in]: ['ativo', 'pre'] } } });
+  const alunos = await Aluno.findAll({
+    where: { status: { [Op.in]: ['ativo', 'pre'] } },
+  });
   const turmas = await Turma.findAll({ order: [['idadeMin', 'ASC']] });
+  const pastores = await Ministro.findAll({
+    where: { pastor: 1, email: { [Op.ne]: null } },
+  });
+  const emailsPastores = pastores.map((m) => m.email).filter(Boolean);
+
+  console.log('[RECLASSIFICADOR] Total turmas:', turmas.length);
+  console.log('[RECLASSIFICADOR] Pastores encontrados:', pastores.length, 'emails:', emailsPastores.join(',') || '(nenhum)');
 
   let reclassificacoes = 0;
 
+  // Limpeza preventiva: garante que cada aluno tenha no máximo um vínculo na tabela Possui
+  try {
+    const todosPossui = await Possui.findAll({ attributes: ['cod', 'aluno'] });
+    // Agrupa por aluno e identifica o cod máximo (mais recente) para manter
+    const maxPorAluno = new Map();
+    for (const p of todosPossui) {
+      const rec = p.toJSON ? p.toJSON() : p;
+      const alunoId = rec.aluno;
+      const cod = rec.cod;
+      if (!maxPorAluno.has(alunoId) || cod > maxPorAluno.get(alunoId)) {
+        maxPorAluno.set(alunoId, cod);
+      }
+    }
+    // Agora remove todos os cod que NÃO são o máximo para cada aluno
+    const codsParaRemover = [];
+    for (const p of todosPossui) {
+      const rec = p.toJSON ? p.toJSON() : p;
+      const alunoId = rec.aluno;
+      const cod = rec.cod;
+      if (maxPorAluno.get(alunoId) !== cod) codsParaRemover.push(cod);
+    }
+    if (codsParaRemover.length) {
+      console.log('[RECLASSIFICADOR] Removendo vínculos duplicados em Possui (mantendo o mais recente):', codsParaRemover.length);
+      await Possui.destroy({ where: { cod: codsParaRemover } });
+    }
+  } catch (err) {
+    console.error('[RECLASSIFICADOR] Erro ao limpar vínculos duplicados (Possui):', err && err.message ? err.message : err);
+  }
+
   for (const aluno of alunos) {
     const idade = calcularIdade(aluno.dataNasc);
-    const turmaAlvo = encontrarTurmaPorIdade(idade, turmas);
 
-    if (turmaAlvo) {
-      await Possui.upsert({
-        aluno: aluno.cod,
-        turma: turmaAlvo.cod,
-      });
+    // Busca por turma exata primeiro
+    const turmaExata = turmas.find((t) => idade >= t.idadeMin && idade <= t.idadeMax) || null;
+
+    if (turmaExata) {
+      // Garante que o aluno tenha apenas um vínculo ativo: remove vínculos anteriores e cria o novo
+      try {
+        await Possui.destroy({ where: { aluno: aluno.cod } });
+      } catch (err) {
+        console.error('[RECLASSIFICADOR] Erro ao remover vínculos antigos (possui):', err && err.message ? err.message : err);
+      }
+      await Possui.create({ aluno: aluno.cod, turma: turmaExata.cod });
       reclassificacoes++;
+      console.log(`[RECLASSIFICADOR] Aluno ${aluno.cod} (${aluno.nome}) classificado na turma exata ${turmaExata.cod} ${turmaExata.nome} (${turmaExata.idadeMin}-${turmaExata.idadeMax})`);
+    } else {
+      // Não há turma com a faixa exata — escolher turma mais próxima (fallback)
+      const menores = turmas.filter((t) => t.idadeMin <= idade);
+      const turmaFallback = menores.length ? menores.sort((a, b) => b.idadeMin - a.idadeMin)[0] : null;
+      const turmaMaisAlta = turmas.sort((a, b) => b.idadeMax - a.idadeMax)[0] || null;
+
+      console.log(`[RECLASSIFICADOR] Aluno ${aluno.cod} (${aluno.nome}) com ${idade} anos não encontrou turma com faixa exata.`);
+
+      if (turmaFallback) {
+        console.log(`[RECLASSIFICADOR] Atribuindo turma próxima (fallback): ${turmaFallback.cod} ${turmaFallback.nome} (${turmaFallback.idadeMin}-${turmaFallback.idadeMax})`);
+        try {
+          await Possui.destroy({ where: { aluno: aluno.cod } });
+        } catch (err) {
+          console.error('[RECLASSIFICADOR] Erro ao remover vínculos antigos (possui):', err && err.message ? err.message : err);
+        }
+        await Possui.create({ aluno: aluno.cod, turma: turmaFallback.cod });
+      } else if (turmaMaisAlta) {
+        console.log(`[RECLASSIFICADOR] Não há turma com idadeMin <= idade; usando turma mais alta: ${turmaMaisAlta.cod} ${turmaMaisAlta.nome} (${turmaMaisAlta.idadeMin}-${turmaMaisAlta.idadeMax})`);
+        try {
+          await Possui.destroy({ where: { aluno: aluno.cod } });
+        } catch (err) {
+          console.error('[RECLASSIFICADOR] Erro ao remover vínculos antigos (possui):', err && err.message ? err.message : err);
+        }
+        await Possui.create({ aluno: aluno.cod, turma: turmaMaisAlta.cod });
+      } else {
+        console.log('[RECLASSIFICADOR] Não há nenhuma turma cadastrada no sistema para atribuir.');
+      }
+
+      // Envia aviso aos pastores quando NÃO há turma com faixa exata para este aluno
+      if (emailsPastores.length) {
+        console.log('[RECLASSIFICADOR] Preparando envio de aviso para pastores:', emailsPastores.join(','));
+        try {
+          const resp = await enviarAvisoTurmaInexistente(aluno, idade, turmaMaisAlta, emailsPastores);
+          console.log('[RECLASSIFICADOR] Resultado envio aviso:', resp && resp.ok ? 'OK' : JSON.stringify(resp));
+        } catch (err) {
+          console.error('[RECLASSIFICADOR] Erro ao enviar aviso de turma inexistente:', err && err.message ? err.message : err);
+        }
+      } else {
+        console.log('[RECLASSIFICADOR] Nenhum e-mail de pastor disponível para envio de aviso.');
+      }
     }
   }
 
+  console.log(`[RECLASSIFICADOR] ${reclassificacoes} alunos reclassificados.`);
   return {
     message: `Reclassificação concluída. ${reclassificacoes} alunos reclassificados.`,
-    totalAlunos: alunos.length
+    totalAlunos: alunos.length,
   };
 }
 
 function encontrarTurmaPorIdade(idade, turmas) {
-  // procura turma exata
-  const exata = turmas.find(t => idade >= t.idadeMin && idade <= t.idadeMax);
+  const exata = turmas.find((t) => idade >= t.idadeMin && idade <= t.idadeMax);
   if (exata) return exata;
-
-  // se não existe turma exata, pega a com menor diferença
-  const menores = turmas.filter(t => t.idadeMin <= idade);
+  const menores = turmas.filter((t) => t.idadeMin <= idade);
   if (menores.length) return menores.sort((a, b) => b.idadeMin - a.idadeMin)[0];
-
-  return turmas.sort((a, b) => a.idadeMin - b.idadeMin)[0] || null;
+  return null;
 }
 
 module.exports = { router, reclassificarAlunos };

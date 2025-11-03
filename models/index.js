@@ -1,6 +1,6 @@
 const { Sequelize, DataTypes } = require('sequelize');
 
-// 🔹 Conexão com o banco de dados MySQL
+//  Conexão com o banco de dados MySQL
 const sequelize = new Sequelize('gracaKids', 'root', 'Claraeu@11', {
   host: 'localhost',
   dialect: 'mysql',
@@ -12,7 +12,7 @@ sequelize.authenticate()
   .catch(err => console.error(' Erro na conexão:', err));
 
 // =====================
-// 🔹 Importa os modelos
+//  Importa os modelos
 // =====================
 const Ministro = require('./Ministro')(sequelize, DataTypes);
 const Endereco = require('./Endereco')(sequelize, DataTypes);
@@ -22,7 +22,7 @@ const Turma = require('./Turma')(sequelize, DataTypes);
 const DiaTurma = require('./DiaTurma')(sequelize, DataTypes);
 const Possui = require('./Possui')(sequelize, DataTypes);
 const Gerencia = require('./Gerencia')(sequelize, DataTypes);
-const TurmaDia = require('./TurmaDia')(sequelize, DataTypes); // 👈 adicionado
+const TurmaDia = require('./TurmaDia')(sequelize, DataTypes); 
 
 const db = {
   sequelize,
